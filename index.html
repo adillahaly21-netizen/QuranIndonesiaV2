@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#155e45">
+  <meta name="description" content="Pembaca Al-Qur'an offline dengan jadwal dan riwayat bacaan pribadi.">
+  <title>Qur'an Harian — Offline</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">۞</div>
+    <div><h1>Qur'an Harian</h1><p>Mushaf & kebiasaan membaca</p></div>
+    <span class="offline-pill"><span class="dot"></span> Offline</span>
+  </header>
+
+  <nav class="tabs" aria-label="Navigasi utama">
+    <button class="tab active" data-view="dashboard">Beranda</button>
+    <button class="tab" data-view="reader">Baca Qur'an</button>
+    <button class="tab" data-view="schedule">Jadwal</button>
+    <button class="tab" data-view="history">Riwayat</button>
+    <button class="tab" data-view="settings">Data & bantuan</button>
+  </nav>
+
+  <main>
+    <section class="view active" id="dashboard">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">LANGKAH KECIL SETIAP HARI</p>
+          <h2>Jadikan membaca Al-Qur'an kebiasaan.</h2>
+          <p>Atur target, lanjutkan halaman terakhir, dan catat bacaan Anda. Data disimpan di perangkat ini.</p>
+          <button class="primary" data-go="reader">Lanjutkan membaca <span>→</span></button>
+        </div>
+        <div class="hero-symbol" aria-hidden="true">۞</div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-icon">📖</span><p>Halaman terakhir</p><strong id="lastPageStat">1</strong><small id="lastJuzStat">Juz 1</small></article>
+        <article class="stat-card"><span class="stat-icon">🎯</span><p>Target hari ini</p><strong id="todayProgress">0/5</strong><small>halaman tercatat</small></article>
+        <article class="stat-card"><span class="stat-icon">🌱</span><p>Hari membaca</p><strong id="streakStat">0</strong><small>hari berturut-turut</small></article>
+      </div>
+
+      <div class="section-heading"><div><p class="eyebrow">RUTINITAS ANDA</p><h3>Jadwal hari ini</h3></div><button class="text-button" data-go="schedule">Atur jadwal →</button></div>
+      <div id="todaySchedule" class="schedule-list"></div>
+
+      <div class="section-heading"><div><p class="eyebrow">PROGRES</p><h3>Perjalanan 30 juz</h3></div><span id="overallPercent" class="percent">0%</span></div>
+      <div class="progress-track"><div id="overallBar" class="progress-fill"></div></div>
+      <p class="muted small" id="overallLabel">Belum ada halaman yang ditandai selesai.</p>
+    </section>
+
+    <section class="view" id="reader">
+      <div class="section-heading reader-heading"><div><p class="eyebrow">PEMBACA AL-QUR'AN</p><h2>Baca Mushaf</h2></div><span class="tag">Mode perangkat</span></div>
+      <div class="reader-controls">
+        <label>Juz<select id="juzSelect"></select></label>
+        <label>Halaman<input id="pageInput" type="number" min="1" max="604" value="1"></label>
+        <button class="secondary" id="openPageBtn">Buka halaman</button>
+      </div>
+      <div class="mushaf-frame">
+        <div class="mushaf-toolbar"><button id="prevPage" aria-label="Halaman sebelumnya">← Sebelumnya</button><span id="pageLabel">Halaman 1 / 604</span><button id="nextPage" aria-label="Halaman berikutnya">Berikutnya →</button></div>
+        <div id="mushafPage" class="mushaf-page">
+          <div class="page-ornament">۞</div>
+          <h3>Halaman Mushaf</h3>
+          <p>Halaman asli Mushaf Pojok Kudus belum disertakan dalam paket ini.</p>
+          <p>Untuk menjaga ketepatan teks Al-Qur'an, tambahkan gambar halaman dari sumber yang sah dan tepercaya ke folder <code>assets/mushaf/</code>.</p>
+          <p class="muted">Nama file: <code>001.webp</code>, <code>002.webp</code>, …, <code>604.webp</code>.</p>
+        </div>
+        <div class="reader-footer"><span id="juzLabel">Juz 1</span><button class="primary" id="markReadBtn">✓ Catat halaman selesai</button></div>
+      </div>
+      <p class="notice">Catatan: nomor juz di sini dihitung berdasarkan pembagian standar 30 juz secara perkiraan halaman. Cocokkan dengan indeks mushaf cetak yang Anda gunakan.</p>
+    </section>
+
+    <section class="view" id="schedule">
+      <div class="section-heading"><div><p class="eyebrow">KONSISTENSI</p><h2>Jadwal membaca</h2></div></div>
+      <div class="panel">
+        <form id="scheduleForm">
+          <div class="form-grid">
+            <label>Target halaman per hari<input id="dailyTarget" type="number" min="1" max="100" value="5" required></label>
+            <label>Waktu sesi<select id="sessionTime"><option value="Subuh">Setelah Subuh</option><option value="Pagi">Pagi</option><option value="Zuhur">Setelah Zuhur</option><option value="Asar">Setelah Asar</option><option value="Magrib">Setelah Magrib</option><option value="Isya">Setelah Isya</option><option value="Bebas">Waktu bebas</option></select></label>
+            <label>Jam pengingat<input id="reminderTime" type="time" value="05:00"></label>
+            <label>Halaman per sesi<input id="sessionPages" type="number" min="1" max="100" value="5" required></label>
+          </div>
+          <div class="form-actions"><button class="primary" type="submit">Simpan jadwal</button><span id="scheduleMessage" class="muted small" role="status"></span></div>
+        </form>
+      </div>
+      <div class="panel soft-panel">
+        <h3>Bagaimana jadwal otomatis bekerja?</h3>
+        <ul><li>Jadwal ditampilkan kembali setiap hari.</li><li>Setelah selesai membaca, buka halaman yang dibaca lalu tekan <b>Catat halaman selesai</b>.</li><li>Riwayat tersimpan dengan tanggal dan waktu perangkat.</li><li>Pengingat di halaman web tidak bisa dijamin muncul saat browser ditutup. Untuk alarm yang konsisten, gunakan alarm HP.</li></ul>
+      </div>
+    </section>
+
+    <section class="view" id="history">
+      <div class="section-heading"><div><p class="eyebrow">CATATAN PRIBADI</p><h2>Riwayat bacaan</h2></div><button class="secondary" id="exportHistoryBtn">Ekspor CSV</button></div>
+      <div class="history-summary" id="historySummary"></div>
+      <div id="historyList" class="history-list"></div>
+      <button class="danger-outline" id="clearHistoryBtn">Hapus seluruh riwayat</button>
+    </section>
+
+    <section class="view" id="settings">
+      <div class="section-heading"><div><p class="eyebrow">PENGATURAN</p><h2>Data & bantuan</h2></div></div>
+      <div class="panel">
+        <h3>Cadangan data</h3><p class="muted">Ekspor jadwal, progres, dan riwayat agar bisa dipindahkan atau dipulihkan.</p>
+        <div class="button-row"><button class="primary" id="backupBtn">Unduh cadangan JSON</button><label class="secondary file-label">Pulihkan cadangan<input id="restoreInput" type="file" accept="application/json"></label></div>
+      </div>
+      <div class="panel">
+        <h3>Menambahkan halaman Mushaf Pojok Kudus</h3>
+        <ol>
+          <li>Siapkan gambar halaman yang sah digunakan dan sudah diverifikasi sesuai Mushaf Pojok Kudus yang Anda pakai.</li>
+          <li>Masukkan gambar ke folder <code>assets/mushaf/</code>.</li>
+          <li>Gunakan nama berurutan, misalnya <code>001.webp</code> sampai <code>604.webp</code>.</li>
+          <li>Unggah folder beserta gambar ke GitHub. Agar sepenuhnya offline, buka web sekali saat online supaya aset tersimpan di cache.</li>
+        </ol>
+        <p class="notice">Paket ini tidak menyertakan gambar 604 halaman, sehingga tidak mengklaim menampilkan mushaf asli sebelum aset yang benar ditambahkan.</p>
+      </div>
+      <div class="panel">
+        <h3>Privasi</h3><p>Jadwal dan riwayat disimpan di penyimpanan browser perangkat ini. Data tidak otomatis tersinkron ke perangkat lain. Jika data browser dihapus, data aplikasi dapat hilang—buat cadangan secara berkala.</p>
+      </div>
+      <div class="panel">
+        <h3>Memasang ke GitHub Pages</h3>
+        <ol><li>Buat repositori baru di GitHub.</li><li>Unggah seluruh isi folder proyek ini (bukan hanya file ZIP).</li><li>Buka <b>Settings → Pages</b>.</li><li>Pada bagian build/deployment, pilih <b>Deploy from a branch</b>, branch <code>main</code>, folder <code>/(root)</code>, lalu simpan.</li><li>Tunggu beberapa menit, lalu buka alamat GitHub Pages yang diberikan.</li></ol>
+        <p class="muted small">GitHub Pages memerlukan internet untuk pertama kali dibuka. Setelah service worker aktif dan aset tersimpan, aplikasi bisa digunakan offline pada browser yang mendukungnya. Instalasi PWA biasanya memerlukan HTTPS.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>Qur'an Harian</span><span>Data tersimpan di perangkat Anda</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

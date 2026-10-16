@@ -1,0 +1,18 @@
+{
+  "name": "Qur'an Harian Offline",
+  "short_name": "Qur'an Harian",
+  "description": "Pembaca Al-Qur'an offline dengan jadwal dan riwayat pribadi.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf6",
+  "theme_color": "#155e45",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
